@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import SwifterMac
 
 class AppDelegate: NSObject, NSApplicationDelegate {
                             
@@ -14,11 +15,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
-        // Insert code here to initialize your application
-    }
+        NSAppleEventManager.sharedAppleEventManager().setEventHandler(self, andSelector: Selector("handleEvent:withReplyEvent:"), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
+        LSSetDefaultHandlerForURLScheme("swifter" as CFStringRef, NSBundle.mainBundle().bundleIdentifier.bridgeToObjectiveC() as CFStringRef)
+        
+        let swifter = Swifter(consumerKey: "RErEmzj7ijDkJr60ayE2gjSHT", consumerSecret: "SbS0CHk11oJdALARa7NDik0nty4pXvAxdt7aj0R5y1gNzWaNEx")
+        
+        let failureHandler: ((NSError) -> Void) = {
+            error in
+            
+            println(error.localizedDescription)
+        }
+        
+        swifter.authorizeWithCallbackURL(NSURL(string: "swifter://success"), success: {
+            accessToken, response in
+            
+            println("Successfully authorized")
+            
+            swifter.getStatusesHomeTimelineWithCount(20, sinceID: nil, maxID: nil, trimUser: true, contributorDetails: false, includeEntities: true, success: {
+                statuses in
+                
+                println(statuses)
+                
+                },
+                failure: failureHandler)
+            
+            }, failure: failureHandler)
 
-    func applicationWillTerminate(aNotification: NSNotification?) {
-        // Insert code here to tear down your application
+    }
+    
+    func handleEvent(event: NSAppleEventDescriptor!, withReplyEvent: NSAppleEventDescriptor!) {
+        Swifter.handleOpenURL(NSURL(string: event.paramDescriptorForKeyword(AEKeyword(keyDirectObject)).stringValue))
     }
 
 
