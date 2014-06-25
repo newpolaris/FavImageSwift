@@ -7,13 +7,37 @@
 //
 
 import Cocoa
+import Accounts
 import SwifterMac
 
 class AppDelegate: NSObject, NSApplicationDelegate {
                             
     @IBOutlet var window: NSWindow
+ 
+    var accountStore = ACAccountStore()
 
+    var osxAccounts: NSArray = [];
 
+    init()
+    {
+        super.init()
+        
+        let accountType = accountStore.accountTypeWithAccountTypeIdentifier(ACAccountTypeIdentifierTwitter)
+        
+        accountStore.requestAccessToAccountsWithType(accountType) {
+            granted, error in
+            if granted {
+                let twitterAccounts = self.accountStore.accountsWithAccountType(accountType)
+                println(twitterAccounts)
+                if let downcastStrings = twitterAccounts as? ACAccount[] {
+                    self.osxAccounts = downcastStrings
+                }
+                println(self.osxAccounts)
+            }
+        }
+        println(osxAccounts)
+    }
+    
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         NSAppleEventManager.sharedAppleEventManager().setEventHandler(self, andSelector: Selector("handleEvent:withReplyEvent:"), forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
         LSSetDefaultHandlerForURLScheme("swifter" as CFStringRef, NSBundle.mainBundle().bundleIdentifier.bridgeToObjectiveC() as CFStringRef)

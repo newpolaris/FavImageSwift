@@ -1,0 +1,10 @@
+framework module SwifterMac {
+  umbrella header "SwifterMac.h"
+
+  export *
+  module * { export * }
+}
+
+module SwifterMac.Swift {
+    header "SwifterMac-Swift.h"
+}
