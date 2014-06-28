@@ -11,13 +11,11 @@ import Accounts
 import SwifterMac
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-                            
     @IBOutlet var window: NSWindow
     @IBOutlet var btnTwitterAccount : NSPopUpButton
     @IBOutlet var osxAccountsController: NSArrayController
     @IBOutlet var lblLoginText : NSTextField
 
- 
     var swifter : Swifter? = nil
     var osxAccounts: ACAccount[] = []
     
@@ -48,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         println(names)
         println(urls)
         
-        for i in 0..names.count {
+               for i in 0..names.count {
             let string: NSString = urls[i]
             let nsurl = NSURL(string: urls[i])
             let nsdata = NSData(contentsOfURL: nsurl)
@@ -82,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             println(error.localizedDescription)
         }
         if let twitter = swifter? {
-            twitter.getFavoritesListWithCount(20, sinceID:nil, maxID:nil,
+            twitter.getFavoritesListWithCount(200, sinceID:nil, maxID:nil,
                 success: saveImages,
                 failure: failureHandler)
         }
