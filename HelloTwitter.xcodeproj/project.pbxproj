@@ -22,6 +22,13 @@
 			remoteGlobalIDString = 66746AA61959D3990013D07A;
 			remoteInfo = HelloTwitter;
 		};
+		66A79B98195F48380022779B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66D973C41959F75E0087B814 /* Swifter.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B9F51121944A61D00894629;
+			remoteInfo = SwifterMac;
+		};
 		66D97449195B0FCC0087B814 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 66D973C41959F75E0087B814 /* Swifter.xcodeproj */;
@@ -186,6 +193,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				66A79B99195F48380022779B /* PBXTargetDependency */,
 			);
 			name = HelloTwitter;
 			productName = HelloTwitter;
@@ -336,6 +344,11 @@
 			isa = PBXTargetDependency;
 			target = 66746AA61959D3990013D07A /* HelloTwitter */;
 			targetProxy = 66746ABA1959D3990013D07A /* PBXContainerItemProxy */;
+		};
+		66A79B99195F48380022779B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwifterMac;
+			targetProxy = 66A79B98195F48380022779B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
