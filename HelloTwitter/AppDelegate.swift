@@ -32,7 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         for i in 0..mediaSwift.count {
                             if let url = mediaSwift[i]["media_url"] as? NSString
                             {
-                                urls.append(url + ":large")
+                                urls.append(url + ":orig")
                                 let nsstring = url as NSString
                                 let splits = nsstring.componentsSeparatedByString("/") as Array<String>
                                 names.append(splits[splits.endIndex-1])
@@ -43,32 +43,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
-        println(names)
-        println(urls)
-        
-               for i in 0..names.count {
+        for i in 0..names.count
+        {
             let string: NSString = urls[i]
             let nsurl = NSURL(string: urls[i])
-            let nsdata = NSData(contentsOfURL: nsurl)
-            
-            /*
-                NSArray       *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString  *documentsDirectory = [paths objectAtIndex:0]
-                NSString  *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory,@"filename.png"];
-            */
-            nsdata.writeToFile(names[i], atomically:true)
+            let nsdata = NSData(contentsOfURL: nsurl, options: NSDataReadingOptions.DataReadingUncached, error: nil)
         }
     }
-    
-    func saveImages(tweets: Dictionary<String, AnyObject>[]?)
-    {
-        if let tweetList = tweets? {
-            for i in 0..tweetList.count {
-                saveImage(tweetList[i])
-            }
-        }
-    }
-    
+
     @IBAction func btnGetFavorite(btn : NSPopUpButton)
     {
         if swifter? == nil {
@@ -79,11 +61,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             println(error.localizedDescription)
         }
+        
         if let twitter = swifter? {
             twitter.getFavoritesListWithCount(200, sinceID:nil, maxID:nil,
-                success: saveImages,
+                success:  {
+                    tweets in
+                    if let tweetList = tweets {
+                        for i in 0..tweetList.count {
+                            self.saveImage(tweetList[i])
+                        }
+                    }
+                },
                 failure: failureHandler)
         }
+        
     }
     
     @IBAction func btnTest(btn : NSPopUpButton)
