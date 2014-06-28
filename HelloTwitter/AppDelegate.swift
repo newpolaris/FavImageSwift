@@ -19,27 +19,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var swifter : Swifter? = nil
     var osxAccounts: ACAccount[] = []
     
-    func saveImage(tweet: Dictionary<String, AnyObject>)
+    func saveImage(tweet: JSONValue)
     {
         var names : Array<String> = []
         var urls : Array<String> = []
         
-        if let entity = tweet["extended_entities"] as? NSDictionary {
-            if let mediatag = entity as? Dictionary<String, AnyObject> {
-                if let medias = mediatag["media"] as? NSArray {
-                    if let mediaSwift = medias as? Dictionary<String, AnyObject>[]
-                    {
-                        for i in 0..mediaSwift.count {
-                            if let url = mediaSwift[i]["media_url"] as? NSString
-                            {
-                                urls.append(url + ":orig")
-                                let nsstring = url as NSString
-                                let splits = nsstring.componentsSeparatedByString("/") as Array<String>
-                                names.append(splits[splits.endIndex-1])
-                            }
-                        }
-                    }
-                }
+        if let medias = tweet["extended_entities"]["media"].array {
+            for i in 0..medias.count {
+                if let url = medias[i]["media_url"].string {
+                   urls.append(url + ":orig")
+                    let nsstring = url as NSString
+                    let splits = nsstring.componentsSeparatedByString("/") as Array<String>
+                    names.append(splits[splits.endIndex-1])
+                 }
             }
         }
         
